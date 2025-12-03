@@ -20,6 +20,12 @@ A backend API for a vehicle rental management system that handles:
 
 ---
 
+## 📁 Code Structure
+
+> **IMPORTANT:** Your implementation **MUST** follow a **modular pattern** with clear separation of concerns. Organize your code into feature-based modules (e.g., auth, users, vehicles, bookings) with proper layering (routes, controllers, services).
+
+---
+
 ## 📊 Database Tables
 
 ### Users
