@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { pool } from '../../config/db';
 import { bookingServices } from './bookings.service';
 
 const getBookings = async (req: Request, res: Response) => {
@@ -54,26 +53,9 @@ const getSelectedBooking = async (req: Request, res: Response) => {
 };
 
 const createBooking = async (req: Request, res: Response) => {
-  //---Getting---data---from---Postman/Browser-Form----
-  const {
-    customer_id,
-    vehicle_id,
-    rent_start_date,
-    rent_end_date,
-    total_price,
-    status,
-  } = req.body;
-
   //---Sending---data---to---db------------------------
   try {
-    const result = await bookingServices.createBooking(
-      customer_id,
-      vehicle_id,
-      rent_start_date,
-      rent_end_date,
-      total_price,
-      status
-    );
+    const result = await bookingServices.createBooking(req.body);
     console.log(result.rows[0]);
 
     res.json({ message: 'Booking Successful ✔️' });
@@ -89,26 +71,9 @@ const createBooking = async (req: Request, res: Response) => {
 };
 
 const updateBooking = async (req: Request, res: Response) => {
-  //---Getting---data---from---Postman/Browser-Form----
-  const {
-    customer_id,
-    vehicle_id,
-    rent_start_date,
-    rent_end_date,
-    total_price,
-    status,
-  } = req.body;
   //---Receiving---data---from---db------------------------
   try {
-    const result = await bookingServices.updateBooking(
-      customer_id,
-      vehicle_id,
-      rent_start_date,
-      rent_end_date,
-      total_price,
-      status,
-      req.params.id as string
-    );
+    const result = await bookingServices.updateBooking(req.body);
 
     if (result.rows.length === 0) {
       return res.status(404).json({

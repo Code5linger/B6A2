@@ -10,14 +10,16 @@ const getSelectedBooking = async (id: string) => {
   return result;
 };
 
-const createBooking = async (
-  customer_id: string,
-  vehicle_id: string,
-  rent_start_date: string,
-  rent_end_date: string,
-  total_price: string,
-  status: string
-) => {
+const createBooking = async (payload: Record<string, unknown>) => {
+  const {
+    customer_id,
+    vehicle_id,
+    rent_start_date,
+    rent_end_date,
+    total_price,
+    status,
+  } = payload;
+
   const result = await pool.query(
     `INSERT INTO bookings(customer_id,vehicle_id,rent_start_date,rent_end_date,total_price,status) VALUES($1, $2, $3, $4, $5, $6) RETURNING *`,
     [
@@ -32,15 +34,17 @@ const createBooking = async (
   return result;
 };
 
-const updateBooking = async (
-  customer_id: string,
-  vehicle_id: string,
-  rent_start_date: string,
-  rent_end_date: string,
-  total_price: string,
-  status: string,
-  id: string
-) => {
+const updateBooking = async (payload: Record<string, unknown>) => {
+  const {
+    customer_id,
+    vehicle_id,
+    rent_start_date,
+    rent_end_date,
+    total_price,
+    status,
+    id,
+  } = payload;
+
   const result = await pool.query(
     `UPDATE bookings SET customer_id=$1, vehicle_id=$2, rent_start_date=$3, rent_end_date=$4, total_price=$5,status=$6 WHERE id=$7 RETURNING *`,
     [

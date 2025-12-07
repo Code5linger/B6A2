@@ -67,18 +67,9 @@ const createNewUser = async (req: Request, res: Response) => {
 };
 
 const updateUser = async (req: Request, res: Response) => {
-  //---Getting---data---from---Postman/Browser-Form----
-  const { name, email, password, phone, role } = req.body;
   //---Receiving---data---from---db------------------------
   try {
-    const result = await userServices.updateUser(
-      name,
-      email,
-      password,
-      phone,
-      role,
-      req.params.id as string
-    );
+    const result = await userServices.updateUser(req.body);
 
     if (result.rows.length === 0) {
       return res.status(404).json({

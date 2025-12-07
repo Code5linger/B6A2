@@ -53,24 +53,9 @@ const getSelectedVehicle = async (req: Request, res: Response) => {
 };
 
 const createVehicle = async (req: Request, res: Response) => {
-  //---Getting---data---from---Postman/Browser-Form----
-  const {
-    vehicle_name,
-    type,
-    registration_number,
-    daily_rent_price,
-    availability_status,
-  } = req.body;
-
   //---Sending---data---to---db------------------------
   try {
-    const result = await vehicleServices.createVehicle(
-      vehicle_name,
-      type,
-      registration_number,
-      daily_rent_price,
-      availability_status
-    );
+    const result = await vehicleServices.createVehicle(req.body);
     console.log(result.rows[0]);
 
     res.json({ message: 'Vehicle Created✔️' });
@@ -86,24 +71,9 @@ const createVehicle = async (req: Request, res: Response) => {
 };
 
 const updateVehicle = async (req: Request, res: Response) => {
-  //---Getting---data---from---Postman/Browser-Form----
-  const {
-    vehicle_name,
-    type,
-    registration_number,
-    daily_rent_price,
-    availability_status,
-  } = req.body;
   //---Receiving---data---from---db------------------------
   try {
-    const result = await vehicleServices.updateVehicle(
-      vehicle_name,
-      type,
-      registration_number,
-      daily_rent_price,
-      availability_status,
-      req.params.id as string
-    );
+    const result = await vehicleServices.updateVehicle(req.body);
 
     if (result.rows.length === 0) {
       return res.status(404).json({

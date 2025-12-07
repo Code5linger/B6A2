@@ -12,23 +12,18 @@ const getSelectedUser = async (id: string) => {
 
 const createNewUser = async (payload: Record<string, unknown>) => {
   //---Getting---data---from---Postman/Browser-Form----
-  const { name, email, password, phone, role } = payload;
+  const { name, email, password, phone, role, id } = payload;
 
   const result = pool.query(
     `INSERT INTO users(name, email, password, phone, role) VALUES($1, $2, $3, $4, $5) RETURNING *`,
-    [name, email, password, phone, role]
+    [name, email, password, phone, role, id]
   );
   return result;
 };
 
-const updateUser = async (
-  name: string,
-  email: string,
-  password: string,
-  phone: number,
-  role: string,
-  id: string
-) => {
+const updateUser = async (payload: Record<string, unknown>) => {
+  const { name, email, password, phone, role, id } = payload;
+
   const result = pool.query(
     `UPDATE users SET name=$1, email=$2, password=$3, phone=$4, role=$5 WHERE id=$6 RETURNING *`,
     [name, email, password, phone, role, id]
