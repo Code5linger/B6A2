@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import { pool } from '../../config/db';
+import { userServices } from './users.service';
 
 const getUsers = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(`SELECT * FROM users`);
+    const result = await userServices.getUsers;
 
     res.status(200).json({
       success: true,
