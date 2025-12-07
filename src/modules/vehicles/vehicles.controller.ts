@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { pool } from '../../config/db';
+import { vehicleServices } from './vehicles.service';
 
 const getVehicles = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(`SELECT * FROM vehicles`);
+    const result = await vehicleServices.getVehicles();
 
     res.status(200).json({
       success: true,
@@ -25,9 +25,9 @@ const getVehicles = async (req: Request, res: Response) => {
 const getSelectedVehicle = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(`SELECT * FROM vehicles WHERE id=$1`, [
-      req.params.id,
-    ]);
+    const result = await vehicleServices.getSelectedVehicle(
+      req.params.id as string
+    );
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -64,15 +64,12 @@ const createVehicle = async (req: Request, res: Response) => {
 
   //---Sending---data---to---db------------------------
   try {
-    const result = await pool.query(
-      `INSERT INTO vehicles(vehicle_name,type,registration_number,daily_rent_price,availability_status) VALUES($1, $2, $3, $4, $5) RETURNING *`,
-      [
-        vehicle_name,
-        type,
-        registration_number,
-        daily_rent_price,
-        availability_status,
-      ]
+    const result = await vehicleServices.createVehicle(
+      vehicle_name,
+      type,
+      registration_number,
+      daily_rent_price,
+      availability_status
     );
     console.log(result.rows[0]);
 
@@ -99,16 +96,13 @@ const updateVehicle = async (req: Request, res: Response) => {
   } = req.body;
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(
-      `UPDATE vehicles SET vehicle_name=$1, type=$2, registration_number=$3, daily_rent_price=$4, availability_status=$5 WHERE id=$6 RETURNING *`,
-      [
-        vehicle_name,
-        type,
-        registration_number,
-        daily_rent_price,
-        availability_status,
-        req.params.id,
-      ]
+    const result = await vehicleServices.updateVehicle(
+      vehicle_name,
+      type,
+      registration_number,
+      daily_rent_price,
+      availability_status,
+      req.params.id as string
     );
 
     if (result.rows.length === 0) {
@@ -137,9 +131,7 @@ const updateVehicle = async (req: Request, res: Response) => {
 const deleteVehicle = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(`DELETE FROM vehicles WHERE id=$1`, [
-      req.params.id,
-    ]);
+    const result = await vehicleServices.deleteVehicle(req.params.id as string);
 
     if (result.rowCount === 0) {
       return res.status(404).json({

@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import { pool } from '../../config/db';
+import { bookingServices } from './bookings.service';
 
 const getBookings = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(`SELECT * FROM bookings`);
+    const result = await bookingServices.getBookings();
 
     res.status(200).json({
       success: true,
@@ -25,9 +26,9 @@ const getBookings = async (req: Request, res: Response) => {
 const getSelectedBooking = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(`SELECT * FROM bookings WHERE id=$1`, [
-      req.params.id,
-    ]);
+    const result = await bookingServices.getSelectedBooking(
+      req.params.id as string
+    );
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -65,16 +66,13 @@ const createBooking = async (req: Request, res: Response) => {
 
   //---Sending---data---to---db------------------------
   try {
-    const result = await pool.query(
-      `INSERT INTO bookings(customer_id,vehicle_id,rent_start_date,rent_end_date,total_price,status) VALUES($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [
-        customer_id,
-        vehicle_id,
-        rent_start_date,
-        rent_end_date,
-        total_price,
-        status,
-      ]
+    const result = await bookingServices.createBooking(
+      customer_id,
+      vehicle_id,
+      rent_start_date,
+      rent_end_date,
+      total_price,
+      status
     );
     console.log(result.rows[0]);
 
@@ -102,17 +100,14 @@ const updateBooking = async (req: Request, res: Response) => {
   } = req.body;
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(
-      `UPDATE bookings SET customer_id=$1, vehicle_id=$2, rent_start_date=$3, rent_end_date=$4, total_price=$5,status=$6 WHERE id=$7 RETURNING *`,
-      [
-        customer_id,
-        vehicle_id,
-        rent_start_date,
-        rent_end_date,
-        total_price,
-        status,
-        req.params.id,
-      ]
+    const result = await bookingServices.updateBooking(
+      customer_id,
+      vehicle_id,
+      rent_start_date,
+      rent_end_date,
+      total_price,
+      status,
+      req.params.id as string
     );
 
     if (result.rows.length === 0) {
@@ -141,9 +136,7 @@ const updateBooking = async (req: Request, res: Response) => {
 const deleteBooking = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(`DELETE FROM bookings WHERE id=$1`, [
-      req.params.id,
-    ]);
+    const result = await bookingServices.deleteBooking(req.params.id as string);
 
     if (result.rowCount === 0) {
       return res.status(404).json({
