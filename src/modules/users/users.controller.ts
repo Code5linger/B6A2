@@ -5,7 +5,7 @@ import { userServices } from './users.service';
 const getUsers = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await userServices.getUsers;
+    const result = await userServices.getUsers();
 
     res.status(200).json({
       success: true,
@@ -26,9 +26,7 @@ const getUsers = async (req: Request, res: Response) => {
 const getSelectedUser = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(`SELECT * FROM users WHERE id=$1`, [
-      req.params.id,
-    ]);
+    const result = await userServices.getSelectedUser(req.params.id as string);
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -54,18 +52,10 @@ const getSelectedUser = async (req: Request, res: Response) => {
 };
 
 const createNewUser = async (req: Request, res: Response) => {
-  //---Getting---data---from---Postman/Browser-Form----
-  const { name, email, password, phone, role } = req.body;
-
   //---Sending---data---to---db------------------------
   try {
-    const result = await pool.query(
-      `INSERT INTO users(name, email, password, phone, role) VALUES($1, $2, $3, $4, $5) RETURNING *`,
-      [name, email, password, phone, role]
-    );
-    console.log(result.rows[0]);
-
-    res.json({ message: 'User Created✔️' });
+    const result = await userServices.createNewUser(req.body);
+    res.json({ message: 'User Created✔️', data: result.rows[0] });
   } catch (err: unknown) {
     let message = 'Internal Server Error';
     if (err instanceof Error) message = err.message;
@@ -82,9 +72,13 @@ const updateUser = async (req: Request, res: Response) => {
   const { name, email, password, phone, role } = req.body;
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(
-      `UPDATE users SET name=$1, email=$2, password=$3, phone=$4, role=$5 WHERE id=$6 RETURNING *`,
-      [name, email, password, phone, role, req.params.id]
+    const result = await userServices.updateUser(
+      name,
+      email,
+      password,
+      phone,
+      role,
+      req.params.id as string
     );
 
     if (result.rows.length === 0) {
@@ -113,9 +107,7 @@ const updateUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await pool.query(`DELETE FROM users WHERE id=$1`, [
-      req.params.id,
-    ]);
+    const result = await userServices.deleteUser(req.params.id as string);
 
     if (result.rowCount === 0) {
       return res.status(404).json({
