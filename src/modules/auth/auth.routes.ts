@@ -3,6 +3,10 @@ import { authController } from './auth.controller';
 
 const router = Router();
 
-router.post('/login', authController.loginUser);
+router.post('/signup', authController.loginUser);
+
+router.post('/signin', authController.signinUser);
 
 export const authRoute = router;
+
+// User login via /api/v1/auth/signin and receives a JWT (JSON Web Token)

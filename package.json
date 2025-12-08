@@ -4,7 +4,8 @@
   "description": "A backend API for a vehicle rental management system that handles:\r - **Vehicles** - Manage vehicle inventory with availability tracking\r - **Customers** - Manage customer accounts and profiles\r - **Bookings** - Handle vehicle rentals, returns and cost calculation\r - **Authentication** - Secure role-based access control (Admin and Customer roles)",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch ./src/index.ts"
+    "dev": "tsx watch ./src/index.ts",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",

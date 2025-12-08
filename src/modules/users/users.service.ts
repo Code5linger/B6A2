@@ -24,8 +24,9 @@ const createNewUser = async (payload: Record<string, unknown>) => {
   return result;
 };
 
-const updateUser = async (payload: Record<string, unknown>) => {
-  const { name, email, password, phone, role, id } = payload;
+const updateUser = async (payload: Record<string, unknown>, id: string) => {
+  const { name, email, password, phone, role } = payload;
+  console.log(payload, name, email, password, phone, role, id);
 
   const result = pool.query(
     `UPDATE users SET name=$1, email=$2, password=$3, phone=$4, role=$5 WHERE id=$6 RETURNING *`,

@@ -69,7 +69,10 @@ const createNewUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await userServices.updateUser(req.body);
+    const result = await userServices.updateUser(
+      req.body,
+      req.params.id as string
+    );
 
     if (result.rows.length === 0) {
       return res.status(404).json({
