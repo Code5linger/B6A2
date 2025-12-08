@@ -23,17 +23,52 @@ const createNewUser = async (payload: Record<string, unknown>) => {
   );
   return result;
 };
-
+//-------------------------------
 const updateUser = async (payload: Record<string, unknown>, id: string) => {
-  const { name, email, password, phone, role } = payload;
-  console.log(payload, name, email, password, phone, role, id);
+  // Build dynamic SET clause
+  const fields: string[] = [];
+  const values: unknown[] = [];
+  let index = 1;
 
-  const result = pool.query(
-    `UPDATE users SET name=$1, email=$2, password=$3, phone=$4, role=$5 WHERE id=$6 RETURNING *`,
-    [name, email, password, phone, role, id]
+  if (payload.name) {
+    fields.push(`name=$${index++}`);
+    values.push(payload.name);
+  }
+  if (payload.email) {
+    fields.push(`email=$${index++}`);
+    values.push(payload.email);
+  }
+  if (payload.phone) {
+    fields.push(`phone=$${index++}`);
+    values.push(payload.phone);
+  }
+  if (payload.role) {
+    fields.push(`role=$${index++}`);
+    values.push(payload.role);
+  }
+  if (payload.password) {
+    const hashed = await bcrypt.hash(payload.password as string, 10);
+    fields.push(`password=$${index++}`);
+    values.push(hashed);
+  }
+
+  if (fields.length === 0) {
+    return null; // Nothing to update
+  }
+
+  values.push(id); // Add id for WHERE clause
+
+  const result = await pool.query(
+    `UPDATE users SET ${fields.join(
+      ', '
+    )} WHERE id=$${index} RETURNING id, name, email, phone, role`,
+    values
   );
+
   return result;
 };
+
+//-------------------------------
 
 const deleteUser = async (id: string) => {
   const result = await pool.query(`DELETE FROM users WHERE id=$1`, [id]);

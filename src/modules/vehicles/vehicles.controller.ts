@@ -6,6 +6,14 @@ const getVehicles = async (req: Request, res: Response) => {
   try {
     const result = await vehicleServices.getVehicles();
 
+    if (result.rows.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: 'No vehicles found',
+        data: [],
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: 'Vehicles Data Received ✔️',
@@ -32,7 +40,7 @@ const getSelectedVehicle = async (req: Request, res: Response) => {
     if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,
-        message: 'Vehicle not found ❌',
+        message: 'Vehicle retrieved successfully',
       });
     }
 
@@ -56,9 +64,12 @@ const createVehicle = async (req: Request, res: Response) => {
   //---Sending---data---to---db------------------------
   try {
     const result = await vehicleServices.createVehicle(req.body);
-    console.log(result.rows[0]);
 
-    res.json({ message: 'Vehicle Created✔️' });
+    return res.status(201).json({
+      success: true,
+      message: 'Vehicle created successfully',
+      data: result.rows[0],
+    });
   } catch (err: unknown) {
     let message = 'Internal Server Error';
     if (err instanceof Error) message = err.message;
@@ -73,7 +84,9 @@ const createVehicle = async (req: Request, res: Response) => {
 const updateVehicle = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
-    const result = await vehicleServices.updateVehicle(req.body);
+    const payload = { ...req.body, id: req.params.id };
+    // const result = await vehicleServices.updateVehicle(req.body);
+    const result = await vehicleServices.updateVehicle(payload);
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -84,7 +97,7 @@ const updateVehicle = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Vehicles Info Updated Successfully ✔️',
+      message: 'Vehicle updated successfully',
       data: result.rows[0],
     });
   } catch (err: unknown) {
@@ -106,13 +119,13 @@ const deleteVehicle = async (req: Request, res: Response) => {
     if (result.rowCount === 0) {
       return res.status(404).json({
         success: false,
-        message: 'Vehicle not found ❌',
+        message: 'Vehicle not found',
       });
     }
 
     res.status(200).json({
       success: true,
-      message: 'Vehicle Deleted ✔️',
+      message: 'Vehicle deleted successfully',
       data: result.rows[0],
     });
   } catch (err: unknown) {

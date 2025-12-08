@@ -16,28 +16,3 @@ router.put('/:id', auth('admin', 'customer'), userControllers.updateUser);
 router.delete('/:id', auth('admin', 'customer'), userControllers.deleteUser);
 
 export const usersRoute = router;
-
-/**
- * POST /api/v1/auth/signup
- * POST /api/v1/auth/signin
- * PUT /api/v1/users/:userId
- * DELETE /api/v1/users/:userId
- *
- *
- */
-
-/***
- * POST /api/v1/vehicles
- * GET /api/v1/vehicles
- * GET /api/v1/vehicles/:vehicleId
- * PUT /api/v1/vehicles/:vehicleId
- * DELETE /api/v1/vehicles/:vehicleId
- *
- */
-
-/**
- * POST /api/v1/bookings
- * GET /api/v1/bookings
- * PUT /api/v1/bookings/:bookingId
- *
- */

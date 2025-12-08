@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { vehiclesControllers } from './vehicles.controller';
+import auth from '../../middleware/auth';
 
 const router = Router();
 
@@ -8,10 +9,10 @@ router.get('/', vehiclesControllers.getVehicles);
 //---Vehicles---Get---One---------------------------------
 router.get('/:id', vehiclesControllers.getSelectedVehicle);
 //---Vehicles---Create---One------------------------------
-router.post('/', vehiclesControllers.createVehicle);
+router.post('/', auth('admin'), vehiclesControllers.createVehicle);
 //---Vehicles---Update---One------------
-router.put('/:id', vehiclesControllers.updateVehicle);
+router.put('/:id', auth('admin'), vehiclesControllers.updateVehicle);
 //---Vehicles---Delete---One------------
-router.delete('/:id', vehiclesControllers.deleteVehicle);
+router.delete('/:id', auth('admin'), vehiclesControllers.deleteVehicle);
 
 export const vehiclesRoute = router;
