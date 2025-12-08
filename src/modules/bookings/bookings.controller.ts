@@ -84,7 +84,7 @@ const createBooking = async (req: Request, res: Response) => {
     return res.status(500).json({ success: false, message });
   }
 };
-
+//-----------------------------------------------------
 interface UserPayload {
   id: number;
   role: string;
@@ -134,7 +134,7 @@ const updateBooking = async (req: Request, res: Response) => {
     return res.status(500).json({ success: false, message });
   }
 };
-
+//------------------------------------------------------
 const deleteBooking = async (req: Request, res: Response) => {
   //---Receiving---data---from---db------------------------
   try {
